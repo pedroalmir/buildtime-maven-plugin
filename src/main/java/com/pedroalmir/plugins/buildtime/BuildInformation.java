@@ -14,6 +14,8 @@ import java.util.List;
  * 
  */
 public class BuildInformation {
+	
+	private Long id;
 
 	private String projectName;
 	private String groupID;
