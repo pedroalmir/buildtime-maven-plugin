@@ -11,32 +11,32 @@ Buildtime Maven Plugin
 3. To use include this in your pom.xml
 <build>
   <plugins>
-		<plugin>
-			<groupId>com.pedroalmir.plugins</groupId>
-			<artifactId>buildtime-maven-plugin</artifactId>
-			<version>1.0.0</version>
-			<executions>
-				<execution>
-					<id>start-timer</id>
-					<phase>validate</phase>
-					<goals>
-						<goal>start</goal>
-					</goals>
-				</execution>
-				<execution>
-					<id>stop-timer</id>
-					<phase>package</phase>
-					<configuration>
-						<!-- Define here URL Post Method to get build informations -->
-						<reportUrl>http://localhost:8080/buildtime</reportUrl>
-					</configuration>
-					<goals>
-						<goal>stop</goal>
-					</goals>
-				</execution>
-			</executions>
-		</plugin>
-	</plugins>
+     <plugin>
+	<groupId>com.pedroalmir.plugins</groupId>
+	<artifactId>buildtime-maven-plugin</artifactId>
+	<version>1.0.0</version>
+	<executions>
+		<execution>
+			<id>start-timer</id>
+			<phase>validate</phase>
+			<goals>
+				<goal>start</goal>
+			</goals>
+		</execution>
+		<execution>
+			<id>stop-timer</id>
+			<phase>package</phase>
+			<configuration>
+				<!-- Define here URL Post Method to get build informations -->
+				<reportUrl>http://localhost:8080/buildtime</reportUrl>
+			</configuration>
+			<goals>
+				<goal>stop</goal>
+			</goals>
+		</execution>
+	</executions>
+     </plugin>
+   </plugins>
 </build>
 
 4. Execute mvn package
