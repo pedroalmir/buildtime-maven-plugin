@@ -2,12 +2,17 @@ package com.pedroalmir.plugins.buildtime;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -36,31 +41,31 @@ public class StopTimer extends AbstractMojo {
 	public void execute() throws MojoExecutionException {
 		try {
 			BuildInformation buildInformation = new BuildInformation();
-			
+
 			MavenProject project = (MavenProject) getPluginContext().get("project");
 			/* Project informations */
 			buildInformation.setProjectName(project.getName());
 			buildInformation.setGroupID(project.getGroupId());
 			buildInformation.setArtifactID(project.getArtifactId());
 			buildInformation.setVersion(project.getVersion());
-			
+
 			/* OS informations */
 			buildInformation.setBuildServer(InetAddress.getLocalHost().getHostName());
 			buildInformation.setOperatingSystem(System.getProperty("os.name"));
 			buildInformation.setOsArchitecture(System.getProperty("os.arch"));
 			buildInformation.setOsVersion(System.getProperty("os.version"));
 			buildInformation.setBuildUser(System.getProperty("user.name"));
-			
+
 			/* Maven Informations: How get this informations ? ? ? */
 			buildInformation.setMavenVersion(null);
 			buildInformation.setGoals(null);
 			buildInformation.setProfiles(null);
-			
+
 			/* Date informations */
 			buildInformation.setBuildDate(new Date());
 			long elapsedTime = Timer.elapsedTime();
-			buildInformation.setElapsedTime(new Date(elapsedTime));
-			
+			buildInformation.setElapsedTime(elapsedTime);
+
 			getLog().debug("##### Stopping timer! Elapsed Time (" + Timer.elapsedTime() + " ms)");
 			getLog().debug("##### Sending informations!");
 			sendInformations(reportUrl, buildInformation);
@@ -73,22 +78,30 @@ public class StopTimer extends AbstractMojo {
 	/**
 	 * @param reportUrl
 	 * @param buildInformation
-	 * @throws IOException 
-	 * @throws ClientProtocolException 
+	 * @throws IOException
+	 * @throws ClientProtocolException
 	 */
-	private void sendInformations(String reportUrl, BuildInformation buildInformation) throws ClientProtocolException, IOException {
+	private void sendInformations(String reportUrl, BuildInformation buildInformation) throws ClientProtocolException,
+			IOException {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpPost postRequest = null;
-		
-		if(reportUrl != null && !reportUrl.isEmpty()){
+
+		if (reportUrl != null && !reportUrl.isEmpty()) {
 			postRequest = new HttpPost(reportUrl);
-		}else{
+			getLog().debug("####### URL: " + reportUrl);
+		} else {
 			postRequest = new HttpPost(DEFAULT_URL);
+			getLog().debug("####### URL: " + DEFAULT_URL);
 		}
+
+		getLog().debug("####### JSON: \n\n" + new Gson().toJson(buildInformation) + "\n\n");
 		
-		postRequest.setHeader("Content-Type", "application/json");
-		postRequest.setEntity(new StringEntity(new Gson().toJson(buildInformation), "UTF-8"));
-		httpClient.execute(postRequest);
-		httpClient.getConnectionManager().shutdown();
+		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+		urlParameters.add(new BasicNameValuePair("buildInformation", new Gson().toJson(buildInformation)));
+		postRequest.setEntity(new UrlEncodedFormEntity(urlParameters));
+		
+		HttpResponse response = httpClient.execute(postRequest);
+		getLog().debug("####### Status Code: " + response.getStatusLine().getStatusCode());
+		
 	}
 }

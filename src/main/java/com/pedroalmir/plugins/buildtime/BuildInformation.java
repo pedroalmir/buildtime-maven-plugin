@@ -33,7 +33,7 @@ public class BuildInformation {
 	private List<String> profiles;
 	
 	private Date buildDate;
-	private Date elapsedTime;
+	private long elapsedTime;
 	
 	/**
 	 * Default constructor
@@ -62,7 +62,7 @@ public class BuildInformation {
 	 */
 	public BuildInformation(String projectName, String groupID, String artifactID, String version, String buildServer,
 			String operatingSystem, String osArchitecture, String osVersion, String buildUser, String mavenVersion,
-			List<String> goals, List<String> profiles, Date buildDate, Date elapsedTime) {
+			List<String> goals, List<String> profiles, Date buildDate, long elapsedTime) {
 		super();
 		this.projectName = projectName;
 		this.groupID = groupID;
@@ -266,14 +266,14 @@ public class BuildInformation {
 	/**
 	 * @return the elapsedTime
 	 */
-	public Date getElapsedTime() {
+	public long getElapsedTime() {
 		return elapsedTime;
 	}
 
 	/**
 	 * @param elapsedTime the elapsedTime to set
 	 */
-	public void setElapsedTime(Date elapsedTime) {
+	public void setElapsedTime(long elapsedTime) {
 		this.elapsedTime = elapsedTime;
 	}
 

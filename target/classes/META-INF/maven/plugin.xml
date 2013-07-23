@@ -66,6 +66,12 @@
       <version>3.0</version>
     </dependency>
     <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <type>jar</type>
+      <version>2.2.4</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
       <type>jar</type>
@@ -244,6 +250,18 @@
       <artifactId>commons-codec</artifactId>
       <type>jar</type>
       <version>1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <type>jar</type>
+      <version>4.2.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore</artifactId>
+      <type>jar</type>
+      <version>4.2.4</version>
     </dependency>
   </dependencies>
 </plugin>
