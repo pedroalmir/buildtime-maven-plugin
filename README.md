@@ -45,6 +45,6 @@ Buildtime Maven Plugin
 ```
 5. Usage: <code>mvn buildtime:start other goal buildtime:stop </code>
 
-6. For example: <code>buildtime:start clean package buildtime:stop</code>
+6. For example: <code>mvn buildtime:start clean package buildtime:stop</code>
 
 
