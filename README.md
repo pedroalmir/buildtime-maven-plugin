@@ -3,8 +3,6 @@ buildtime-maven-plugin
 
 Buildtime Maven Plugin
 
-How to setup environments
-
 1. Install plugin: mvn install
 
 2. Add <plugingroup>com.pedroalmir.plugins</plugingroup> in your settings.xml
