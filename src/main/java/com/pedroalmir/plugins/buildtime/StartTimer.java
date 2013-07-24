@@ -7,7 +7,6 @@ import org.apache.maven.plugin.MojoExecutionException;
  * Goal that starts the stop watch
  * 
  * @goal start
- * @phase validate
  * @requiresOnline true
  */
 public class StartTimer extends AbstractMojo {

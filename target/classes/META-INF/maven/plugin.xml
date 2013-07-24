@@ -18,7 +18,6 @@
       <aggregator>false</aggregator>
       <requiresOnline>true</requiresOnline>
       <inheritedByDefault>true</inheritedByDefault>
-      <phase>package</phase>
       <implementation>com.pedroalmir.plugins.buildtime.StopTimer</implementation>
       <language>java</language>
       <instantiationStrategy>per-lookup</instantiationStrategy>
@@ -43,7 +42,6 @@
       <aggregator>false</aggregator>
       <requiresOnline>true</requiresOnline>
       <inheritedByDefault>true</inheritedByDefault>
-      <phase>validate</phase>
       <implementation>com.pedroalmir.plugins.buildtime.StartTimer</implementation>
       <language>java</language>
       <instantiationStrategy>per-lookup</instantiationStrategy>

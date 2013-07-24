@@ -23,14 +23,13 @@ import com.google.gson.Gson;
  * Goal that reports the build time
  * 
  * @goal stop
- * @phase package
  * @requiresOnline true
  */
 public class StopTimer extends AbstractMojo {
 	/**
 	 * 
 	 */
-	private static final String DEFAULT_URL = "http://buildtime-maven-plugin.appspot.com/buildTime";
+	private static final String DEFAULT_URL = "http://buildtime-maven-plugin.appspot.com/";
 	/**
 	 * The stops build and reports elapsed time
 	 * 
@@ -66,10 +65,13 @@ public class StopTimer extends AbstractMojo {
 			long elapsedTime = Timer.elapsedTime();
 			buildInformation.setElapsedTime(elapsedTime);
 
-			getLog().debug("##### Stopping timer! Elapsed Time (" + Timer.elapsedTime() + " ms)");
+			getLog().info("##### Stopping timer! Elapsed Time (" + Timer.elapsedTime() + " ms)");
 			getLog().debug("##### Sending informations!");
-			sendInformations(reportUrl, buildInformation);
 
+			getLog().info("##### Sending information ! ! !");
+			sendInformations(reportUrl, buildInformation);
+			
+			getLog().info("##### Stopping plugin ! ! !");
 		} catch (Exception e) {
 			getLog().error("Exception caught =" + e.getMessage());
 		}
