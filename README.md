@@ -5,7 +5,7 @@ Buildtime Maven Plugin
 
 1. Install plugin: mvn install
 
-2. Add ```html<plugingroup>com.pedroalmir.plugins</plugingroup>``` in your settings.xml
+2. Add ```<plugingroup>com.pedroalmir.plugins</plugingroup>``` in your settings.xml
 
 3. To use include this in your pom.xml
 
