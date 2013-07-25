@@ -31,7 +31,31 @@
           <editable>true</editable>
           <description>The stops build and reports elapsed time</description>
         </parameter>
+        <parameter>
+          <name>session</name>
+          <type>org.apache.maven.execution.MavenSession</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The maven session</description>
+        </parameter>
+        <parameter>
+          <name>settings</name>
+          <type>org.apache.maven.settings.Settings</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Settings</description>
+        </parameter>
       </parameters>
+      <configuration>
+        <session implementation="org.apache.maven.execution.MavenSession">${session}</session>
+        <settings implementation="org.apache.maven.settings.Settings">${settings}</settings>
+      </configuration>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.execution.RuntimeInformation</role>
+          <field-name>runtime</field-name>
+        </requirement>
+      </requirements>
     </mojo>
     <mojo>
       <goal>start</goal>

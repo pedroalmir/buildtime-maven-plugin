@@ -13,9 +13,12 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.execution.RuntimeInformation;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.settings.Settings;
 
 import com.google.gson.Gson;
 
@@ -37,6 +40,22 @@ public class StopTimer extends AbstractMojo {
 	 */
 	private String reportUrl;
 
+	/**
+	 * The maven session
+	 * @parameter expression="${session}" 
+	 */
+	private MavenSession session;
+	/**
+	 * Settings
+	 * @parameter expression="${settings}"
+	 */
+	private Settings settings;
+	/** 
+	 * @component 
+	 * */
+	private RuntimeInformation runtime;
+
+	@SuppressWarnings("unchecked")
 	public void execute() throws MojoExecutionException {
 		try {
 			BuildInformation buildInformation = new BuildInformation();
@@ -56,10 +75,15 @@ public class StopTimer extends AbstractMojo {
 			buildInformation.setBuildUser(System.getProperty("user.name"));
 
 			/* Maven Informations: How get this informations ? ? ? */
-			buildInformation.setMavenVersion(null);
-			buildInformation.setGoals(null);
-			buildInformation.setProfiles(null);
-
+			buildInformation.setMavenVersion(runtime.getApplicationVersion().toString());
+			buildInformation.setGoals(session.getGoals());
+			
+			buildInformation.getGoals().remove("buildtime:start");
+			buildInformation.getGoals().remove("buildtime:stop");
+			
+			getLog().debug("\n\n" + session.getGoals() + "\n\n");
+			buildInformation.setProfiles(settings.getActiveProfiles());
+			
 			/* Date informations */
 			buildInformation.setBuildDate(new Date());
 			long elapsedTime = Timer.elapsedTime();
@@ -70,7 +94,7 @@ public class StopTimer extends AbstractMojo {
 
 			getLog().info("##### Sending information ! ! !");
 			sendInformations(reportUrl, buildInformation);
-			
+
 			getLog().info("##### Stopping plugin ! ! !");
 		} catch (Exception e) {
 			getLog().error("Exception caught =" + e.getMessage());
@@ -97,13 +121,14 @@ public class StopTimer extends AbstractMojo {
 		}
 
 		getLog().debug("####### JSON: \n\n" + new Gson().toJson(buildInformation) + "\n\n");
-		
+
 		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 		urlParameters.add(new BasicNameValuePair("buildInformation", new Gson().toJson(buildInformation)));
 		postRequest.setEntity(new UrlEncodedFormEntity(urlParameters));
-		
+
 		HttpResponse response = httpClient.execute(postRequest);
 		getLog().debug("####### Status Code: " + response.getStatusLine().getStatusCode());
-		
+
 	}
+
 }
