@@ -89,7 +89,7 @@ public class StopTimer extends AbstractMojo {
 			long elapsedTime = Timer.elapsedTime();
 			buildInformation.setElapsedTime(elapsedTime);
 
-			getLog().info("##### Stopping timer! Elapsed Time (" + Timer.elapsedTime() + " ms)");
+			getLog().debug("##### Stopping timer! Elapsed Time (" + Timer.elapsedTime() + " ms)");
 			getLog().debug("##### Sending informations!");
 
 			getLog().info("##### Sending information ! ! !");
