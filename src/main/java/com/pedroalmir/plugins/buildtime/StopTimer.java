@@ -51,51 +51,87 @@ public class StopTimer extends AbstractMojo {
 	 */
 	private Settings settings;
 	/** 
-	 * @component 
+	 * @component
 	 * */
 	private RuntimeInformation runtime;
+	 /**
+     * The current project instance.
+     * 
+     * @parameter default-value="${project}"
+     * @required
+     * @readonly
+     */
+	private MavenProject project;
 
 	@SuppressWarnings("unchecked")
 	public void execute() throws MojoExecutionException {
 		try {
 			BuildInformation buildInformation = new BuildInformation();
 
-			MavenProject project = (MavenProject) getPluginContext().get("project");
-			/* Project informations */
-			buildInformation.setProjectName(project.getName());
-			buildInformation.setGroupID(project.getGroupId());
-			buildInformation.setArtifactID(project.getArtifactId());
-			buildInformation.setVersion(project.getVersion());
-
-			/* OS informations */
-			buildInformation.setBuildServer(InetAddress.getLocalHost().getHostName());
-			buildInformation.setOperatingSystem(System.getProperty("os.name"));
-			buildInformation.setOsArchitecture(System.getProperty("os.arch"));
-			buildInformation.setOsVersion(System.getProperty("os.version"));
-			buildInformation.setBuildUser(System.getProperty("user.name"));
-
-			/* Maven Informations: How get this informations ? ? ? */
-			buildInformation.setMavenVersion(runtime.getApplicationVersion().toString());
-			buildInformation.setGoals(session.getGoals());
+			//MavenProject project = (MavenProject) getPluginContext().get("project");
+			try{
+				/* Project informations */
+				buildInformation.setProjectName(project.getName());
+				buildInformation.setGroupID(project.getGroupId());
+				buildInformation.setArtifactID(project.getArtifactId());
+				buildInformation.setVersion(project.getVersion());
+			}catch(Exception ex){
+				getLog().info("Não foi possível coletar as informações referentes ao projeto.");
+				getLog().info("Exception: " + ex.getMessage());
+			}
 			
-			buildInformation.getGoals().remove("buildtime:start");
-			buildInformation.getGoals().remove("buildtime:stop");
+			try{
+				/* OS informations */
+				buildInformation.setBuildServer(InetAddress.getLocalHost().getHostName());
+				buildInformation.setOperatingSystem(System.getProperty("os.name"));
+				buildInformation.setOsArchitecture(System.getProperty("os.arch"));
+				buildInformation.setOsVersion(System.getProperty("os.version"));
+				buildInformation.setBuildUser(System.getProperty("user.name"));
+			}catch(Exception ex){
+				getLog().info("Não foi possível coletar as informações referentes ao sistema operacional.");
+				getLog().info("Exception: " + ex.getMessage());
+			}
 			
-			getLog().debug("\n\n" + session.getGoals() + "\n\n");
-			buildInformation.setProfiles(settings.getActiveProfiles());
+			try{
+				/* Maven Informations: How get this informations ? ? ? */
+				buildInformation.setMavenVersion(runtime.getApplicationVersion().toString());
+				buildInformation.setGoals(session.getGoals());
+				buildInformation.getGoals().remove("buildtime:start");
+				buildInformation.getGoals().remove("buildtime:stop");
+				
+				getLog().debug("\n\n" + session.getGoals() + "\n\n");
+			}catch(Exception ex){
+				getLog().info("Não foi possível coletar as informações referentes aos goals executados.");
+				getLog().info("Exception: " + ex.getMessage());
+			}
 			
-			/* Date informations */
-			buildInformation.setBuildDate(new Date());
-			long elapsedTime = Timer.elapsedTime();
-			buildInformation.setElapsedTime(elapsedTime);
+			try{
+				buildInformation.setProfiles(settings.getActiveProfiles());
+			}catch(Exception ex){
+				getLog().info("Não foi possível coletar as informações referentes aos profiles executados.");
+				getLog().info("Exception: " + ex.getMessage());
+			}
+			
+			try{
+				/* Date informations */
+				buildInformation.setBuildDate(new Date());
+				long elapsedTime = Timer.elapsedTime();
+				buildInformation.setElapsedTime(elapsedTime);
+				getLog().debug("##### Stopping timer! Elapsed Time (" + Timer.elapsedTime() + " ms)");
+			}catch(Exception ex){
+				getLog().info("Não foi possível coletar as informações referentes aos tempo de build.");
+				getLog().info("Exception: " + ex.getMessage());
+			}
 
-			getLog().debug("##### Stopping timer! Elapsed Time (" + Timer.elapsedTime() + " ms)");
-			getLog().debug("##### Sending informations!");
+			try{
+				getLog().info("##### Sending information ! ! !");
+				sendInformations(reportUrl, buildInformation);
+				getLog().info("##### Stopping plugin ! ! !");
+			}catch(Exception ex){
+				getLog().info("Não foi possível enviar as informações para o servidor.");
+				getLog().info("Exception: " + ex.getMessage());
+			}
 
-			getLog().info("##### Sending information ! ! !");
-			sendInformations(reportUrl, buildInformation);
-
-			getLog().info("##### Stopping plugin ! ! !");
 		} catch (Exception e) {
 			getLog().error("Exception caught =" + e.getMessage());
 		}
@@ -132,3 +168,4 @@ public class StopTimer extends AbstractMojo {
 	}
 
 }
+

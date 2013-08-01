@@ -5,10 +5,18 @@
 	<groupId>com.pedroalmir.plugins</groupId>
 	<artifactId>buildtime-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
-	<version>1.0.0</version>
+	<version>1.1.2</version>
 
 	<name>buildtime-maven-plugin Maven Mojo</name>
 	<url>http://maven.apache.org</url>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<dependencies>
 		<dependency>
@@ -73,5 +81,18 @@
 			<version>2.2.1</version>
 		</dependency>
 	</dependencies>
-
+	
+	<distributionManagement>
+		<repository>
+			<id>infoway-releases</id>
+			<name>Infoway Releases</name>
+			<url>http://nexus.infoway-pi.com.br/content/repositories/infoway-releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>infoway-snapshots</id>
+			<name>Infoway Snapshots</name>
+			<url>http://nexus.infoway-pi.com.br/content/repositories/infoway-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
 </project>
